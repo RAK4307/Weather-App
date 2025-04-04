@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherApp</title>
+    <link rel="stylesheet" href="style.css">
+</head> 
+<body>
+    <div class="class">
+        <div class="search">
+            <input type="text" placeholder="city name" spellcheck="false">
+            <button><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7_Ef8p3AiMNU7SmrPBzPrmlRM9kFAR1zYgw&s" alt="search icon"></button>
+        </div>
+        <div class="error">
+            <p>Invalid city name</p>
+        </div>
+        <div class="weather">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWhmiJwVjGV4lAYnVFXtQWsj6ifJ1sMwDaDA&s" class="weather-icon">
+            <h1 class="temp">22°c</h1>
+            <h2 class="city">New York</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="https://static.thenounproject.com/png/985548-200.png">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhaiRIlEjuUFTrB_J_kaOZsu5l6w_lpuHy_Q&s">
+                    <div>
+                        <p class="wind">12 km/h</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apikey ="3ae3514f286a799482024e5bfa51facd";
+        const apiUrl ="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weatherIcon = document.querySelector(".weather-icon");
+
+        async function checkWeather(city){
+            const response = await fetch(apiUrl + city + `&appid=${apikey}`);
+            
+            if(response.status== 404){
+                document.querySelector(".error").style.display = "block";
+                document.querySelector(".weather").style.display = "none";
+            }else{
+
+            var data = await response.json();
+        
+
+           
+            document.querySelector(".city").innerHTML=data.name;
+            document.querySelector(".temp").innerHTML=Math.round(data.main.temp)+" °c";
+            document.querySelector(".humidity").innerHTML=data.main.humidity+" %";
+            document.querySelector(".wind").innerHTML=data.wind.speed+" km/h";
+
+            if(data.weather[0].main=="Clouds"){
+                weatherIcon.src = "data:image/png;base64,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"
+
+            }else  if(data.weather[0].main=="Clear"){
+                weatherIcon.src = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fclear-sky_3222807&psig=AOvVaw1VBC4vuppkywq3BUic67GX&ust=1725280449680000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNi18ePgoYgDFQAAAAAdAAAAABAK"
+    
+            }else  if(data.weather[0].main=="Rain"){
+                weatherIcon.src = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Frainy_4150904&psig=AOvVaw00EWMrHTtBO6ULYxzR83DM&ust=1725280548467000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKDo6ZXhoYgDFQAAAAAdAAAAABAb"
+
+            }else  if(data.weather[0].main=="Drizzle"){
+                weatherIcon.src = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fdrizzle_4837678&psig=AOvVaw1IkXLMUBEobfHyQYksz5I3&ust=1725280619768000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCNCcl7fhoYgDFQAAAAAdAAAAABAE"
+
+            }else  if(data.weather[0].main=="Mist"){
+                weatherIcon.src = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Ffog_1197102&psig=AOvVaw09O__2qiYZrdEIb6ozOjHw&ust=1725280648011000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMizhcThoYgDFQAAAAAdAAAAABAE"
+            }
+
+            document.querySelector(".weather").style.display = " block"
+            document.querySelector(".error").style.display = "none";
+        }
+    }
+
+    checkWeather();
+    searchBtn.addEventListener("click",()=>{
+        checkWeather(searchBox.value);
+
+    })
+    </script>
+</body>
+</html>
